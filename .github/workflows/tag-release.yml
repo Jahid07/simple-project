@@ -1,12 +1,12 @@
-name: Tag Release with Zip
+name: Tag and Zip on Push
 
 on:
   push:
     tags:
-      - '*.*.*' # Triggers on version tags like v1.0.0
+      - '*' # Triggers on any tag push
 
 jobs:
-  build-and-tag-release:
+  build-and-zip-tag:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,27 +24,25 @@ jobs:
       - name: Build Project
         run: npm run build # Ensure you have a build script in package.json
 
-      - name: Zip Files for Release
+      - name: Zip Files for Tag
         run: |
-          zip -r simple-project.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
+          zip -r simple-project-${{ github.ref_name }}.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: true
+      # Commenting out release creation step so it only tags and zips
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref_name }}
+      #     release_name: Release ${{ github.ref_name }}
+      #     draft: false
+      #     prerelease: true
 
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Upload the zip file as a build artifact instead of release asset
+      - name: Upload Zip as Artifact
+        uses: actions/upload-artifact@v3
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./simple-project.zip # The zip file created earlier
-          asset_name: simple-project.zip
-          asset_content_type: application/zip
+          name: simple-project-${{ github.ref_name }}.zip
+          path: ./simple-project-${{ github.ref_name }}.zip
