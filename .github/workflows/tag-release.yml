@@ -38,6 +38,7 @@ jobs:
           release_name: ${{ github.ref_name }} Release
           draft: false
           prerelease: false
+          release: false
 
       - name: Upload Zip to Tag
         uses: actions/upload-release-asset@v1
