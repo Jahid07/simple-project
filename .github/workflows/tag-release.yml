@@ -28,7 +28,7 @@ jobs:
         run: |
           zip -r simple-project.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
 
-      - name: Create Draft Release for Tag
+      - name: Create Release for Tag
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -36,10 +36,10 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           release_name: ${{ github.ref_name }} Release
-          draft: true   # Set to true so the release is created as a draft
+          draft: false
           prerelease: false
 
-      - name: Upload Zip to Draft Release
+      - name: Upload Zip to Tag
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
