@@ -28,9 +28,23 @@ jobs:
         run: |
           zip -r simple-project.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
 
-      # Store the zip file as an artifact instead of uploading to a release
-      - name: Upload Zip as Artifact
-        uses: actions/upload-artifact@v3
+      - name: Create Draft Release for Tag
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         with:
-          name: simple-project.zip
-          path: ./simple-project.zip
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }} Release
+          draft: true   # Set to true so the release is created as a draft
+          prerelease: false
+
+      - name: Upload Zip to Draft Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./simple-project.zip
+          asset_name: simple-project.zip
+          asset_content_type: application/zip
