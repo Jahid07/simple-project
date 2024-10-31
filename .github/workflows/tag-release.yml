@@ -26,9 +26,9 @@ jobs:
 
       - name: Zip Files for Tag
         run: |
-          zip -r simple-project-${{ github.ref_name }}.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
+          zip -r simple-project.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
 
-      # Commenting out release creation step so it only tags and zips
+      # Commented out release creation step so it only tags and zips
       # - name: Create Release
       #   id: create_release
       #   uses: actions/create-release@v1
@@ -40,9 +40,9 @@ jobs:
       #     draft: false
       #     prerelease: true
 
-      # Upload the zip file as a build artifact instead of release asset
+      # Upload the zip file as an artifact with a static name
       - name: Upload Zip as Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: simple-project-${{ github.ref_name }}.zip
-          path: ./simple-project-${{ github.ref_name }}.zip
+          name: simple-project.zip
+          path: ./simple-project.zip
