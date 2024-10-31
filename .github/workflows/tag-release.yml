@@ -1,4 +1,4 @@
-name: Create Release
+name: Tag Release with Zip
 
 on:
   push:
@@ -6,13 +6,25 @@ on:
       - 'v*.*.*'
 
 jobs:
-  release:
+  build-and-tag-release:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3 # Upgraded to v3
 
-      - name: Create GitHub Release
+      - name: Setup Node.js
+        uses: actions/setup-node@v3 # Upgraded to v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Project
+        run: npm run build # Ensure you have a build script in package.json
+
+      - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -29,6 +41,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./your-plugin.zip
+          asset_path: ./your-plugin.zip # Make sure this matches your built zip file
           asset_name: your-plugin.zip
           asset_content_type: application/zip
