@@ -3,7 +3,7 @@ name: Tag Release with Zip
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*.*.*' # Triggers on version tags like v1.0.0
 
 jobs:
   build-and-tag-release:
@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3 # Upgraded to v3
+        uses: actions/checkout@v3 # Updated to the latest version
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3 # Upgraded to v3
+        uses: actions/setup-node@v3 # Updated to Node v20
         with:
           node-version: '20'
 
@@ -23,6 +23,10 @@ jobs:
 
       - name: Build Project
         run: npm run build # Ensure you have a build script in package.json
+
+      - name: Zip Files for Release
+        run: |
+          zip -r simple-project-v${{ github.ref_name }}.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
 
       - name: Create Release
         id: create_release
@@ -41,6 +45,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./your-plugin.zip # Make sure this matches your built zip file
-          asset_name: your-plugin.zip
+          asset_path: ./simple-project-v${{ github.ref_name }}.zip # The zip file created earlier
+          asset_name: simple-project-v${{ github.ref_name }}.zip
           asset_content_type: application/zip
