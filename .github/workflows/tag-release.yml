@@ -3,7 +3,7 @@ name: Tag and Zip on Push
 on:
   push:
     tags:
-      - '*' # Triggers on any tag push
+      - '*.*.*' # Triggers on any tag push
 
 jobs:
   build-and-zip-tag:
