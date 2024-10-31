@@ -26,7 +26,7 @@ jobs:
 
       - name: Zip Files for Release
         run: |
-          zip -r simple-project-v${{ github.ref_name }}.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
+          zip -r simple-project.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
 
       - name: Create Release
         id: create_release
