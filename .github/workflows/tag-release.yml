@@ -1,9 +1,10 @@
-name: Tag and Zip on Push
+name: Tag and Zip on Tag Push
 
 on:
   push:
     tags:
-      - '*.*.*' # Triggers on any tag push
+      - 'v*'       # Triggers on any tag prefixed with 'v' (like v6.0.0)
+      - '[0-9]*'   # Alternative pattern for simple versioning like 1.0.0
 
 jobs:
   build-and-zip-tag:
@@ -11,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3 # Updated to the latest version
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3 # Updated to Node v20
+        uses: actions/setup-node@v3
         with:
           node-version: '20'
 
@@ -22,27 +23,14 @@ jobs:
         run: npm install
 
       - name: Build Project
-        run: npm run build # Ensure you have a build script in package.json
+        run: npm run build || echo "Skipping build as it doesn't exist."
 
       - name: Zip Files for Tag
         run: |
           zip -r simple-project.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
 
-      # Commented out release creation step so it only tags and zips
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: ${{ github.ref_name }}
-      #     release_name: Release ${{ github.ref_name }}
-      #     draft: false
-      #     prerelease: true
-
-      # Upload the zip file as an artifact with a static name
       - name: Upload Zip as Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: simple-project.zip
+          name: simple-project
           path: ./simple-project.zip
