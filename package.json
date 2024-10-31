@@ -1,0 +1,24 @@
+{
+  "name": "simple-project",
+  "version": "1.0.0",
+  "description": "[![License: GPL v2 or later](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "npm run build && zip -r simple-project-v$npm_package_version.zip . -x '*node_modules*' '*.git*' '*.md'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jahid07/simple-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jahid07/simple-project/issues"
+  },
+  "homepage": "https://github.com/Jahid07/simple-project#readme",
+  "devDependencies": {
+    "rimraf": "^3.0.2"
+  }
+}
