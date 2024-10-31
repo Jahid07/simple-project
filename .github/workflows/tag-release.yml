@@ -3,7 +3,7 @@ name: Tag Release with Zip
 on:
   push:
     tags:
-      - 'v*.*.*' # Triggers on version tags like v1.0.0
+      - '*.*.*' # Triggers on version tags like v1.0.0
 
 jobs:
   build-and-tag-release:
@@ -26,7 +26,7 @@ jobs:
 
       - name: Zip Files for Release
         run: |
-          zip -r simple-project-v${{ github.ref_name }}.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
+          zip -r simple-project.zip . -x '*node_modules*' '*.git*' '*.md' '.github*'
 
       - name: Create Release
         id: create_release
@@ -45,6 +45,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./simple-project-v${{ github.ref_name }}.zip # The zip file created earlier
-          asset_name: simple-project-v${{ github.ref_name }}.zip
+          asset_path: ./simple-project.zip # The zip file created earlier
+          asset_name: simple-project.zip
           asset_content_type: application/zip
